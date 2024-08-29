@@ -1,6 +1,5 @@
 @echo off
 
-:: BatchGotAdmin
 :-------------------------------------
 REM  --> Check for permissions
     IF "%PROCESSOR_ARCHITECTURE%" EQU "amd64" (
@@ -30,19 +29,30 @@ if '%errorlevel%' NEQ '0' (
 :--------------------------------------    
 
 @echo off
-tasklist | findstr "WB11Config.exe" > nul
-if errorlevel 1 (
-    echo WBConfig11.exe is not running, continuing...
-    echo [1/3] Removing AppData\Local\Stardock...
-    rmdir /s /q "C:\Users\%USERNAME%\AppData\Local\Stardock"
-    echo [2/3] Removing ProgramData\Stardock\WindowBlinds
-    rmdir /s /q "C:\ProgramData\Stardock\WindowBlinds"
-    echo [3/3] Removing HKEY_CURRENT_USER\Software\Stardock
-    reg delete HKCU\Software\Stardock /f
+reg delete HKCU\Software\Stardock /f
 
-    echo Done! Launch Stardock and start your free trial again. You can use the same email.
-) else (
-    echo Please close WindowBlinds 11 Config menu.
+echo Detecting Stardock Installations...
+
+set "reset_trial="
+for %%A in ("C:\ProgramData\Stardock\WindowBlinds|WB11Config.exe|WindowBlinds 11", "C:\ProgramData\Stardock\Start11|Start11Config.exe|Start11") do (
+    for /f "tokens=1-3 delims=|" %%B in ("%%A") do (
+        if exist "%%B" (
+            echo   %%D detected
+            tasklist | findstr "%%C" > nul
+            if errorlevel 1 (
+                rmdir /s /q "%%B"
+                echo   %%D trial license has been reset
+                set "reset_trial=1"
+            ) else (
+                echo Please exit %%D before running this script
+            )
+        )
+    )
 )
 
+if not defined reset_trial (
+    echo No Stardock installations detected or trial reset was unsuccessful.
+)
+
+echo Done, start new trial with temp email @ https://temp-mail.org or https://sharklasers.com
 pause
