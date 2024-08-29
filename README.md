@@ -1,2 +1,2 @@
-Allows you to create infinite free trials with WindowBlinds 11. It does not affect app settings, only deletes the trial license. You can use the same email over and over again as the servers do not check for that.
-30$ to change window themes is ABSURD.
+# wb11ft
+Deletes License.sig in Stardock app locations to allow constant activation of new free trials. This is better than using a cracked version because the DLL stays signed
