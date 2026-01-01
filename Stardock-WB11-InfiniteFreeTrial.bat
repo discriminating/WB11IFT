@@ -29,30 +29,29 @@ if '%errorlevel%' NEQ '0' (
 :--------------------------------------    
 
 @echo off
+
+set "WB_DIR=C:\ProgramData\Stardock\WindowBlinds"
+set "WB_EXE=WB11Config.exe"
+
+tasklist /FI "IMAGENAME eq %WB_EXE%" 2>NUL | find /I "%WB_EXE%" >NUL
+
+if errorlevel 1 (
+    if exist "%WB_DIR%" (
+        echo Deleting %WB_DIR%...
+        rmdir /s /q "%WB_DIR%"
+        mkdir "%WB_DIR%"
+        echo Done.
+    ) else (
+        echo Directory not found.
+    )
+) else (
+    echo Please exit WindowBlinds before running this script.
+	pause
+	exit /B
+)
+
 reg delete HKCU\Software\Stardock /f
 
-echo Detecting Stardock Installations...
+echo Done, start new trial with temp email @ https://temp-mail.org or https://sharklasers.com.
 
-set "reset_trial="
-for %%A in ("C:\ProgramData\Stardock\WindowBlinds|WB11Config.exe|WindowBlinds 11", "C:\ProgramData\Stardock\Start11|Start11Config.exe|Start11") do (
-    for /f "tokens=1-3 delims=|" %%B in ("%%A") do (
-        if exist "%%B" (
-            echo   %%D detected
-            tasklist | findstr "%%C" > nul
-            if errorlevel 1 (
-                rmdir /s /q "%%B"
-                echo   %%D trial license has been reset
-                set "reset_trial=1"
-            ) else (
-                echo Please exit %%D before running this script
-            )
-        )
-    )
-)
-
-if not defined reset_trial (
-    echo No Stardock installations detected or trial reset was unsuccessful.
-)
-
-echo Done, start new trial with temp email @ https://temp-mail.org or https://sharklasers.com
 pause
