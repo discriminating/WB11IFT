@@ -1,2 +1,5 @@
 # wb11ft
-Deletes License.sig in Stardock app locations to allow constant activation of new free trials. This is better than using a cracked version because the DLL stays signed
+Deletes C:\ProgramData\Stardock\WindowBlinds\ and HKCU\Software\Stardock, allowing users to start free trials infinitely.
+
+# Usage
+Run the batch file as administrator.
